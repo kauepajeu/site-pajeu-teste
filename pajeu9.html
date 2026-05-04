@@ -1,0 +1,2039 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pajeú — Resistência em Movimento</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* =============================================
+       VARIÁVEIS & RESET
+    ============================================= */
+    @font-face {
+      font-family: 'pajeutitulo';
+      src: url('fonts/chinese rocks rg.otf') format('opentype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'pajeutexto';
+      src: url('fonts/Montserrat-Regular.otf') format('opentype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    :root {
+      --bordo:     #7a0c0c;
+      --bordo-esc: #4d0707;
+      --bordo-clr: #a01515;
+      --ouro:      #e8b84b;
+      --ouro-clr:  #f5d07a;
+      --azul:      #1a3a7a;
+      --azul-clr:  #2450a8;
+      --creme:     #f4ede0;
+      --creme2:    #ede3d0;
+      --branco:    #fff8f0;
+      --texto:     #1a0808;
+
+      --font-display: 'pajeutitulo', 'Oswald', sans-serif;
+      --font-body:    'pajeutexto', Georgia, serif;
+      --font-ui:      'pajeutitulo', 'pajeutexto', serif, georgia;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bordo-esc);
+      color: var(--creme);
+      overflow-x: hidden;
+    }
+
+    /* =============================================
+       PADRÃO DE TEXTURA / GRAFISMO
+    ============================================= */
+    .tex-overlay {
+      position: absolute; inset: 0; pointer-events: none; z-index: 0;
+      background-image:
+        repeating-linear-gradient(45deg, rgba(232,184,75,.04) 0px, rgba(232,184,75,.04) 1px, transparent 1px, transparent 12px),
+        repeating-linear-gradient(-45deg, rgba(232,184,75,.04) 0px, rgba(232,184,75,.04) 1px, transparent 1px, transparent 12px);
+    }
+
+    /* =============================================
+       NAVEGAÇÃO
+    ============================================= */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(77,7,7,0.97);
+      backdrop-filter: blur(6px);
+      border-bottom: 2px solid var(--ouro);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem;
+      height: 75px;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: .75rem;
+      text-decoration: none;
+      margin-left: 35px;
+    }
+    .nav-logo-img {
+      width: 110px;
+      height: auto;
+      display: block;
+      transform: translateY(4px);
+    }
+    .nav-img {
+      width: 5000px;
+      max-width: none;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transform: translateY(120px);
+    }
+    .nav-links {
+      display: flex; gap: .25rem; list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--font-ui);
+      font-size: .82rem; font-weight: 600;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: var(--creme2); text-decoration: none;
+      padding: .45rem .85rem;
+      border-radius: 2px;
+      transition: color .2s, background .2s;
+    }
+    .nav-links a:hover { color: var(--ouro); background: rgba(232,184,75,.1); }
+    .nav-links a.destaque {
+      background: var(--ouro); color: var(--bordo-esc);
+      border-radius: 2px;
+    }
+    .nav-links a.destaque:hover { background: var(--ouro-clr); color: var(--bordo-esc); }
+
+    .nav-toggle {
+      display: none; flex-direction: column; gap: 5px;
+      cursor: pointer; padding: .5rem;
+    }
+    .nav-toggle span {
+      display: block; width: 26px; height: 2px;
+      background: var(--ouro); border-radius: 2px;
+      transition: transform .3s, opacity .3s;
+    }
+
+    /* =============================================
+       HERO
+    ============================================= */
+    #inicio {
+      min-height: 100vh;
+      background: var(--bordo-esc);
+      position: relative;
+      display: flex; align-items: center;
+      padding: 100px 2rem 4rem;
+      overflow: hidden;
+    }
+    #inicio::before {
+      content: '';
+      position: absolute; right: -5%; top: 0; bottom: 0;
+      width: 55%;
+      background: var(--bordo);
+      clip-path: polygon(12% 0, 100% 0, 100% 100%, 0% 100%);
+      z-index: 0;
+    }
+    .hero-inner {
+      position: relative; z-index: 1;
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 3rem; align-items: center;
+      width: 100%;
+    }
+    .hero-titulo {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 6vw, 5.5rem);
+      font-weight: 800; line-height: .95;
+      text-transform: uppercase;
+      color: var(--creme);
+      margin-bottom: .5rem;
+    }
+    .hero-titulo em {
+      font-style: normal; color: var(--ouro);
+      display: block;
+    }
+    .hero-texto {
+      font-size: clamp(.9rem, 1.5vw, 1rem); line-height: 1.75;
+      color: var(--creme2);
+      max-width: 480px;
+    }
+    .hero-ctas {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+    .btn {
+      font-family: var(--font-ui);
+      font-size: .82rem; font-weight: 600;
+      letter-spacing: .14em; text-transform: uppercase;
+      text-decoration: none; border: none; cursor: pointer;
+      padding: .75rem 1.6rem;
+      transition: transform .15s, box-shadow .15s;
+      display: inline-block;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-ouro { background: var(--ouro); color: var(--bordo-esc); }
+    .btn-ouro:hover { background: var(--ouro-clr); box-shadow: 0 6px 20px rgba(232,184,75,.4); }
+    .btn-outline { background: transparent; color: var(--creme); border: 2px solid var(--creme2); }
+    .btn-outline:hover { border-color: var(--ouro); color: var(--ouro); }
+
+    /* =============================================
+       SEÇÃO GENÉRICA
+    ============================================= */
+    section { position: relative; overflow: hidden; }
+
+    .secao-label {
+      font-family: var(--font-body);
+      font-size: .68rem; letter-spacing: .3em; text-transform: uppercase;
+      color: var(--ouro); margin-bottom: .75rem;
+      display: flex; align-items: center; gap: .75rem;
+    }
+    .secao-label::after {
+      content: ''; flex: 1; height: 1px; background: currentColor; opacity: .4;
+    }
+    .secao-titulo {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 800; text-transform: uppercase; line-height: 1.05; letter-spacing: 0.3rem;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 5rem 2rem; position: relative; z-index: 1; }
+
+    .hero-imagem {
+      position: relative; z-index: 1; max-width: none;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .hero-imagem img {
+      max-width: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* =============================================
+       NOTAS POLÍTICAS (BLOG)
+    ============================================= */
+    #notas { background: var(--creme); color: var(--texto); }
+    #notas .secao { color: var(--bordo-esc); }
+    #notas .secao-titulo { color: var(--bordo-esc); }
+
+    .notas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
+      gap: 1.75rem;
+      margin-top: 2.5rem;
+    }
+    .nota-card {
+      background: var(--branco);
+      border-top: 4px solid var(--bordo);
+      padding: 1.75rem;
+      transition: box-shadow .2s, transform .2s;
+    }
+    .nota-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(122,12,12,.15); }
+
+    .nota-tag {
+      font-family: var(--font-ui);
+      font-size: .65rem; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--branco); background: var(--bordo);
+      padding: .2rem .6rem; display: inline-block; margin-bottom: 1rem;
+    }
+    .nota-titulo {
+      font-family: var(--font-display);
+      font-size: 1.35rem; font-weight: 700;
+      color: var(--bordo-esc); line-height: 1.2;
+      margin-bottom: .75rem;
+    }
+    .nota-resumo {
+      font-size: .8rem; line-height: 1.65;
+      color: #4a2a2a;
+      margin-bottom: 1.25rem;
+    }
+    .nota-meta {
+      font-family: var(--font-ui);
+      font-size: .72rem; color: #7a5a5a; letter-spacing: .05em;
+      display: flex; justify-content: space-between; align-items: center;
+      border-top: 1px solid #e0d0c0;
+      padding-top: .75rem;
+    }
+    .nota-ler {
+      font-family: var(--font-ui); font-size: .72rem; font-weight: 600;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--bordo); text-decoration: none;
+    }
+    .nota-ler:hover { color: var(--bordo-clr); }
+
+    .notas-ver-mais { text-align: center; margin-top: 2.5rem; }
+
+    /* =============================================
+       QUEM SOMOS
+    ============================================= */
+    #quem-somos { background: var(--bordo); color: var(--creme); }
+
+    /* Layout principal: poema 2 colunas à esquerda | vídeo centralizado à direita */
+    .qs-top {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2.5rem;
+      align-items: center;
+      margin-top: 2rem;
+    }
+    .qs-poema {
+      background: rgba(0,0,0,.25);
+      border-left: 4px solid var(--ouro);
+      padding: 2rem 2rem 4rem 1.80rem;
+      line-height: 2;
+      font-style: italic;
+      font-size: 1.20rem;
+      color: var(--creme2);
+    }
+    .qs-poema strong {
+      font-style: normal; font-family: var(--font-display);
+      font-size: 1.5rem; color: var(--ouro); letter-spacing: .10em; font-style: italic;
+      line-height: 1.2;
+    }
+
+    /* Poema dividido em 2 colunas lado a lado */
+    .qs-poema-colunas {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+    .qs-poema-col {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Vídeo do Instagram à direita, centralizado verticalmente */
+    .qs-video-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 340px;
+      flex-shrink: 0;
+    }
+    .qs-video-wrap blockquote.instagram-media {
+      min-width: unset !important;
+      width: 100% !important;
+      max-width: 340px;
+    }
+
+    /* Texto de apresentação abaixo do par poema+vídeo */
+    .qs-bottom {
+      margin-top: 2.5rem;
+    }
+    .qs-gramsci {
+      font-size: clamp(1rem, 1.6vw, 1.25rem);
+      color: var(--ouro);
+      font-style: italic;
+      text-align: right;
+      margin-top: 5rem;
+      margin-bottom: 3rem;
+      line-height: 1.5;
+    }
+    .qs-texto p {
+      font-size: 1rem; line-height: 1.8; margin-bottom: 1.25rem;
+      color: var(--creme2); text-align: justify; hyphens: auto;
+    }
+    .qs-texto strong { color: var(--ouro); font-style: normal; }
+
+    /* Bandeiras lado a lado em uma linha */
+    .pilares {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem; margin-top: 1.75rem;
+    }
+    .pilar {
+      background: rgba(0,0,0,.2);
+      border: 1px solid rgba(232,184,75,.3);
+      padding: 1rem 1.25rem;
+    }
+    .pilar-icon { font-size: 1.4rem; margin-bottom: .4rem; }
+    .pilar h4 {
+      font-family: var(--font-ui);
+      font-size: .78rem; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--ouro); margin-bottom: .3rem;
+    }
+    .pilar p { font-size: .82rem; line-height: 1.55; color: var(--creme2); }
+
+    /* =============================================
+       DOCUMENTOS
+    ============================================= */
+    #documentos { background: var(--bordo-esc); color: var(--creme); }
+
+    .docs-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+      gap: 1.25rem; margin-top: 2.5rem;
+    }
+    .doc-card {
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(232,184,75,.25);
+      padding: 1.5rem;
+      display: flex; gap: 1.25rem; align-items: flex-start;
+      text-decoration: none; color: inherit;
+      transition: background .2s, border-color .2s;
+    }
+    .doc-card:hover { background: rgba(232,184,75,.08); border-color: var(--ouro); }
+    .doc-icone {
+      font-size: 2rem; flex-shrink: 0;
+      width: 52px; height: 52px;
+      background: rgba(232,184,75,.15);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .doc-info h3 {
+      font-family: var(--font-ui);
+      font-size: 1rem; font-weight: 600;
+      color: var(--ouro); margin-bottom: .35rem;
+    }
+    .doc-info p { font-size: .82rem; line-height: 1.5; color: var(--creme2); text-align: justify; }
+    .doc-info span {
+      font-family: var(--font-ui); font-size: .65rem;
+      letter-spacing: .15em; text-transform: uppercase;
+      color: var(--azul-clr); margin-top: .5rem; display: block;
+    }
+
+    /* =============================================
+       ORGANIZE-SE
+    ============================================= */
+    #organize-se {
+      background: var(--ouro);
+      color: var(--bordo-esc);
+      text-align: center;
+    }
+    #organize-se .secao-label { color: var(--bordo-esc); justify-content: center; }
+    #organize-se .secao-label::after { display: none; }
+    #organize-se .secao-titulo { color: var(--bordo-esc); }
+
+    .org-sub {
+      font-size: 1.05rem; line-height: 1.7;
+      max-width: 600px; margin: 1.25rem auto 2.5rem;
+      color: var(--bordo);
+    }
+    .org-form {
+      display: flex; flex-direction: column; gap: 1rem;
+      max-width: 500px; margin: 0 auto 2rem;
+    }
+    .org-form input, .org-form select, .org-form textarea {
+      font-family: var(--font-body); font-size: 1rem;
+      background: rgba(255,255,255,.85);
+      border: 2px solid transparent;
+      padding: .85rem 1.1rem;
+      color: var(--texto);
+      width: 100%;
+      transition: border-color .2s;
+    }
+    .org-form input:focus, .org-form select:focus, .org-form textarea:focus {
+      outline: none; border-color: var(--bordo);
+      background: white;
+    }
+    .org-form textarea { resize: vertical; min-height: 100px; }
+    .org-form button {
+      font-family: var(--font-ui); font-size: .9rem;
+      font-weight: 700; letter-spacing: .15em; text-transform: uppercase;
+      background: var(--bordo-esc); color: var(--ouro);
+      border: none; padding: 1rem; cursor: pointer;
+      transition: background .2s;
+    }
+    .org-form button:hover { background: var(--bordo); }
+    .org-form .form-msg {
+      font-family: var(--font-ui); font-size: .85rem;
+      display: none; padding: .75rem; text-align: center;
+    }
+    .org-form .form-msg.ok { display: block; background: #2d6a2d; color: #c8f5c8; }
+    .org-form .form-msg.erro { display: block; background: #6a1a1a; color: #f5c8c8; }
+
+    .org-redes {
+      display: flex; gap: 1.25rem; justify-content: center; flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+    .rede-btn {
+      font-family: var(--font-ui);
+      font-size: .78rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+      background: transparent; border: 2px solid var(--bordo);
+      color: var(--bordo); text-decoration: none;
+      padding: .55rem 1.2rem;
+      transition: background .2s, color .2s;
+    }
+    .rede-btn:hover { background: var(--bordo-esc); color: var(--ouro); border-color: var(--bordo-esc); }
+
+    /* =============================================
+       FAIXA SLOGAN
+    ============================================= */
+    .faixa-slogan {
+      background: var(--bor);
+      overflow: hidden;
+      white-space: nowrap;
+      padding: .85rem 0;
+      border-top: 2px solid var(--ouro-clr);
+      border-bottom: 2px solid var(--ouro-clr);
+    }
+    .faixa-inner {
+      display: inline-flex; gap: 0;
+      animation: ticker 22s linear infinite;
+    }
+    .faixa-slogan span {
+      font-family: var(--font-display);
+      font-size: .9rem; font-weight: 800;
+      letter-spacing: .18em; text-transform: uppercase;
+      color: var(--branco);
+      padding: 0 2.5rem;
+    }
+    .faixa-slogan span.sep { color: var(--branco); }
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* =============================================
+       RODAPÉ
+    ============================================= */
+    footer {
+      background: #1a0404;
+      border-top: 3px solid var(--bordo);
+      padding: 3rem 2rem 1.5rem;
+      color: var(--creme2);
+      text-align: center;
+    }
+    .footer-logo {
+      font-family: var(--font-display);
+      font-size: 2rem; font-weight: 800;
+      color: var(--ouro); letter-spacing: .08em;
+      margin-bottom: .25rem;
+    }
+    .footer-sub {
+      font-family: var(--font-ui);
+      font-size: .65rem; letter-spacing: .25em; text-transform: uppercase;
+      color: var(--creme2); opacity: .6; margin-bottom: 2rem;
+    }
+    .footer-links {
+      display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap;
+      margin-bottom: 2rem; list-style: none;
+    }
+    .footer-links a {
+      font-family: var(--font-ui); font-size: .75rem;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: var(--creme2); text-decoration: none;
+      opacity: .7; transition: opacity .2s, color .2s;
+    }
+    .footer-links a:hover { opacity: 1; color: var(--ouro); }
+    .footer-copy {
+      font-size: .75rem; opacity: .4;
+      border-top: 1px solid rgba(255,255,255,.1);
+      padding-top: 1.25rem; margin-top: 1rem;
+    }
+
+    /* =============================================
+       MODAL — LEITURA DE NOTA
+    ============================================= */
+    .modal-bg {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(20,4,4,.88); backdrop-filter: blur(4px);
+      align-items: center; justify-content: center; padding: 1.5rem;
+    }
+    .modal-bg.open { display: flex; }
+    .modal {
+      background: var(--creme);
+      color: var(--texto);
+      max-width: 720px; width: 100%;
+      max-height: 85vh; overflow-y: auto;
+      position: relative; padding: 2.5rem;
+    }
+    .modal-fechar {
+      position: absolute; top: 1rem; right: 1.25rem;
+      font-size: 1.5rem; cursor: pointer; color: var(--bordo);
+      background: none; border: none; font-family: var(--font-display);
+    }
+    .modal h2 {
+      font-family: var(--font-display);
+      font-size: 1.75rem; font-weight: 800;
+      color: var(--bordo-esc); margin-bottom: 1rem;
+      line-height: 1.15;
+    }
+    .modal .modal-meta {
+      font-family: var(--font-ui); font-size: .72rem;
+      letter-spacing: .1em; color: #7a5a5a;
+      margin-bottom: 1.5rem; text-transform: uppercase;
+    }
+    .modal .modal-corpo { font-size: 1rem; line-height: 1.85; }
+    .modal .modal-corpo p { margin-bottom: 1rem; text-indent: 2em; padding-left: 0; }
+
+    /* =============================================
+       PAINEL ADMIN
+    ============================================= */
+    #admin-panel {
+      display: none; position: fixed; inset: 0; z-index: 300;
+      background: #1a0808; overflow-y: auto; padding: 2rem;
+    }
+    #admin-panel.open { display: block; }
+    .admin-header {
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 2px solid var(--ouro); padding-bottom: 1rem; margin-bottom: 2rem;
+    }
+    .admin-header h2 {
+      font-family: var(--font-display); font-size: 1.5rem;
+      color: var(--ouro); letter-spacing: .1em; text-transform: uppercase;
+    }
+    .admin-tabs {
+      display: flex; gap: .5rem; margin-bottom: 2rem; max-width: 900px; margin-left: auto; margin-right: auto;
+      flex-wrap: wrap;
+    }
+    .admin-tab-btn {
+      font-family: var(--font-ui); font-size: .78rem; font-weight: 600;
+      letter-spacing: .12em; text-transform: uppercase;
+      background: rgba(255,255,255,.06); color: var(--creme2);
+      border: 1px solid rgba(232,184,75,.2); padding: .55rem 1.2rem;
+      cursor: pointer; transition: all .2s;
+    }
+    .admin-tab-btn.ativo { background: var(--ouro); color: var(--bordo-esc); border-color: var(--ouro); }
+    .admin-tab-btn:hover:not(.ativo) { background: rgba(232,184,75,.12); color: var(--ouro); }
+
+    .admin-secao { display: none; max-width: 900px; margin: 0 auto; }
+    .admin-secao.ativa { display: block; }
+
+    .admin-form {
+      display: flex; flex-direction: column; gap: 1rem;
+      max-width: 700px; margin: 0 auto;
+    }
+    .admin-form label {
+      font-family: var(--font-ui); font-size: .75rem;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: var(--ouro); margin-bottom: .25rem; display: block;
+    }
+    .admin-form input, .admin-form select, .admin-form textarea {
+      font-family: var(--font-body); font-size: .95rem;
+      background: rgba(255,255,255,.07); border: 1px solid rgba(232,184,75,.3);
+      color: var(--creme); padding: .75rem 1rem; width: 100%;
+    }
+    .admin-form textarea { min-height: 180px; resize: vertical; }
+    .admin-form input:focus, .admin-form textarea:focus, .admin-form select:focus {
+      outline: none; border-color: var(--ouro);
+    }
+    .admin-posts, .admin-docs-lista {
+      max-width: 700px; margin: 2rem auto 0;
+    }
+    .admin-posts h3, .admin-docs-lista h3 {
+      font-family: var(--font-display); color: var(--ouro); font-size: 1.1rem;
+      letter-spacing: .1em; text-transform: uppercase;
+      border-bottom: 1px solid rgba(232,184,75,.3); padding-bottom: .5rem;
+      margin-bottom: 1rem;
+    }
+    .admin-post-item {
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(255,255,255,.05); padding: .75rem 1rem;
+      margin-bottom: .5rem; gap: .5rem; flex-wrap: wrap;
+    }
+    .admin-post-item span { font-size: .9rem; flex: 1; min-width: 0; word-break: break-word; }
+    .admin-item-btns { display: flex; gap: .4rem; flex-shrink: 0; }
+    .admin-item-btns button {
+      font-family: var(--font-ui); font-size: .68rem;
+      letter-spacing: .1em; text-transform: uppercase;
+      border: none; padding: .35rem .75rem; cursor: pointer;
+    }
+    .btn-excluir { background: rgba(160,21,21,.6); color: var(--creme); }
+    .btn-editar { background: rgba(232,184,75,.2); color: var(--ouro); }
+
+    /* Área de edição inline */
+    .admin-editar-area {
+      background: rgba(255,255,255,.04); border: 1px solid rgba(232,184,75,.2);
+      padding: 1.25rem; margin-top: .5rem; display: none;
+    }
+    .admin-editar-area.aberto { display: block; }
+    .admin-editar-area input, .admin-editar-area textarea, .admin-editar-area select {
+      font-family: var(--font-body); font-size: .9rem;
+      background: rgba(255,255,255,.07); border: 1px solid rgba(232,184,75,.3);
+      color: var(--creme); padding: .65rem .9rem; width: 100%;
+      margin-bottom: .75rem;
+    }
+    .admin-editar-area textarea { min-height: 130px; resize: vertical; }
+    .admin-editar-area input:focus, .admin-editar-area textarea:focus { outline: none; border-color: var(--ouro); }
+    .admin-editar-area label {
+      font-family: var(--font-ui); font-size: .7rem; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--ouro); display: block; margin-bottom: .3rem;
+    }
+
+    /* =============================================
+       EDITOR DE TEXTO RICO (ADMIN)
+    ============================================= */
+    .rte-toolbar {
+      display: flex; flex-wrap: wrap; gap: .3rem;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(232,184,75,.3);
+      border-bottom: none;
+      padding: .5rem .6rem;
+    }
+    .rte-toolbar button, .rte-toolbar select, .rte-toolbar input[type="color"] {
+      font-family: var(--font-ui); font-size: .72rem;
+      background: rgba(255,255,255,.08); color: var(--creme);
+      border: 1px solid rgba(232,184,75,.25);
+      padding: .28rem .6rem; cursor: pointer;
+      transition: background .15s, color .15s;
+      line-height: 1.4; min-width: 28px;
+    }
+    .rte-toolbar button:hover { background: rgba(232,184,75,.25); color: var(--ouro); }
+    .rte-toolbar button.ativo { background: var(--ouro); color: var(--bordo-esc); border-color: var(--ouro); }
+    .rte-toolbar select { padding: .28rem .4rem; }
+    .rte-toolbar input[type="color"] { width: 34px; height: 28px; padding: 2px 3px; cursor: pointer; }
+    .rte-toolbar .rte-sep {
+      width: 1px; background: rgba(232,184,75,.2); margin: 0 .15rem; align-self: stretch;
+      border: none; padding: 0; min-width: unset; cursor: default;
+    }
+    .rte-toolbar .rte-sep:hover { background: rgba(232,184,75,.2); }
+    .rte-label {
+      font-family: var(--font-ui); font-size: .72rem; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--ouro); margin-bottom: .25rem; display: block;
+    }
+    .rte-editor {
+      min-height: 220px; max-height: 420px;
+      overflow-y: auto;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(232,184,75,.3);
+      color: var(--creme);
+      padding: .85rem 1rem;
+      font-family: var(--font-body); font-size: .95rem; line-height: 1.75;
+      outline: none;
+    }
+    .rte-editor:focus { border-color: var(--ouro); }
+    .rte-editor p { margin-bottom: .5rem; }
+
+    /* Card com imagem de capa */
+    .nota-card.tem-capa { padding: 0; overflow: hidden; }
+    .nota-card.tem-capa .nota-capa {
+      position: relative; height: 160px; overflow: hidden;
+    }
+    .nota-card.tem-capa .nota-capa img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    .nota-card.tem-capa .nota-capa-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(77,7,7,.92) 40%, rgba(77,7,7,.2));
+      display: flex; flex-direction: column;
+      justify-content: flex-end; padding: 1rem 1.25rem .75rem;
+    }
+    .nota-card.tem-capa .nota-capa-overlay .nota-titulo {
+      color: var(--branco); font-size: 1.1rem; margin-bottom: .25rem; letter-spacing: 0.12em;
+    }
+    .nota-card.tem-capa .nota-capa-overlay .nota-resumo-capa {
+      font-size: .60rem; color: var(--creme2); line-height: 1.4;
+      font-family: var(--font-body); letter-spacing: .02em;
+    }
+    .nota-card.tem-capa .nota-body { padding: 1rem 1.25rem 1.25rem; }
+
+    /* Biografia do autor no modal */
+    .modal-bio {
+      font-family: 'pajeutexto', Georgia, serif;
+      font-style: italic; font-size: .88rem; line-height: 1.7;
+      color: #5a3a3a; border-top: 1px solid #ddd;
+      margin-top: 1.5rem; padding-top: 1rem;
+    }
+    .modal-autor-bio {
+      font-family: var(--font-ui); font-size: .8rem;
+      letter-spacing: .05em; color: #5a3a3a;
+    }
+    .modal-autor-bio .autor-nome {
+      font-weight: 700; font-size: .80rem; color: var(--bordo-esc);
+      display: block; margin-bottom: .2rem;
+    }
+    .modal-autor-bio .autor-bio-txt {
+      font-family: 'pajeutexto', Georgia, serif;
+      font-style: italic; font-size: .70rem; line-height: 1.6;
+      color: #5a4040;
+    }
+    @media (max-width: 1024px) {
+      .pilares { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .qs-top { grid-template-columns: 1fr; gap: 2rem; }
+      .qs-video-wrap { width: 100%; }
+      .pilares { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 680px) {
+      .nav-links {
+        display: none; flex-direction: column; position: fixed;
+        top: 75px; left: 0; right: 0; background: var(--bordo-esc);
+        padding: 1.5rem; gap: .5rem; border-bottom: 2px solid var(--ouro);
+      }
+      .nav-links.open { display: flex; }
+      .nav-toggle { display: flex; }
+      .hero-titulo { font-size: 2.2rem; }
+      .nav-logo { margin-left: 0; }
+      .container { padding: 3.5rem 1.25rem; }
+      .pilares { grid-template-columns: repeat(2, 1fr); }
+      .qs-video-wrap blockquote.instagram-media { max-width: 100% !important; }
+      .qs-poema-colunas { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 420px) {
+      .pilares { grid-template-columns: 1fr; }
+      .hero-ctas { flex-direction: column; }
+      .admin-tabs { gap: .35rem; }
+      .admin-tab-btn { font-size: .7rem; padding: .45rem .9rem; }
+    }
+
+    /* Garantia de zoom */
+    @media (min-resolution: 1.5dppx) {
+      html { font-size: 15px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAVEGAÇÃO ===== -->
+  <nav>
+    <a href="#inicio" class="nav-logo">
+      <img src="logos/lobowhite.png" alt="Logo Pajeú — Resistência em Movimento" class="nav-logo-img">
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#inicio">Início</a></li>
+      <li><a href="#notas">Notas Políticas</a></li>
+      <li><a href="#quem-somos">Quem Somos</a></li>
+      <li><a href="#documentos">Documentos</a></li>
+      <li><a href="#organize-se" class="destaque">Organize-se!</a></li>
+    </ul>
+    <div class="nav-toggle" id="navToggle" onclick="toggleNav()">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section id="inicio">
+    <div class="tex-overlay"></div>
+    <div class="hero-inner">
+      <div class="hero-content">
+        <h1 class="hero-titulo">
+          Ousar Lutar,<br><em>Ousar Vencer!</em>
+        </h1>
+        <p class="hero-texto">
+          Somos um movimento de juventude ecossocialista que conecta a luta socioambiental
+          com os interesses da classe trabalhadora. Raiz popular, horizonte revolucionário.
+        </p>
+        <div class="hero-ctas">
+          <a href="#organize-se" class="btn btn-ouro">Junte-se a nós</a>
+          <a href="#quem-somos" class="btn btn-outline">Quem é o Pajeú?</a>
+        </div>
+      </div>
+
+      <!--
+        IMAGEM DO HERO — Para exibir uma imagem no lado direito da página inicial,
+        substitua o src abaixo pela URL da sua imagem externa.
+        Exemplo: src="https://exemplo.com/foto-militancia.jpg"
+        Enquanto o src estiver vazio, o espaço permanece invisível.
+      -->
+      <div class="hero-imagem">
+        <img src="fotos/pajeubandeiras.png" alt="Imagem com diversas pessoas balançando bandeiras do coletivo pajeú e duas bandeiras da palestina" class="nav-img" onerror="this.parentElement.style.display='none'"/>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== FAIXA SLOGAN ===== -->
+  <div class="faixa-slogan">
+    <div class="faixa-inner" id="faixaInner"></div>
+  </div>
+
+  <!-- ===== NOTAS POLÍTICAS ===== -->
+  <section id="notas">
+    <div class="container">
+      <div class="secao-label">Notas Políticas</div>
+      <h2 class="secao-titulo" style="color:var(--bordo-esc)">Pensamento<br>em Movimento</h2>
+      <div class="notas-grid" id="notasGrid"></div>
+      <div class="notas-ver-mais">
+        <a href="#" class="btn btn-ouro" style="background:var(--bordo);color:var(--creme)">Ver todas as notas</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== QUEM SOMOS ===== -->
+  <section id="quem-somos">
+    <div class="container">
+      <div class="secao-label">Quem Somos</div>
+      <h2 class="secao-titulo">Pajeú — Resistência em Movimento</h2>
+
+      <!-- Poema em 2 colunas (esquerda) + Vídeo do Instagram (direita, centralizado) -->
+      <div class="qs-top">
+        <div class="qs-poema">
+          <div class="qs-poema-colunas">
+            <!-- Coluna 1: primeira estrofe -->
+            <div class="qs-poema-col">
+              <strong>São mais de 500 anos</strong>
+              De Resistência e de Luta<br>
+              Mas há lutadores e fatos<br>
+              Que a história nos oculta<br>
+              Vamos lembrar de um deles<br>
+              E no seu legado inspirar<br>
+              As lutas daqui em diante<br>
+              Pajeú nos protegerá<br>
+              Escravo negro liberto<br>
+              Estrategista, guerrilheiro<br>
+              Ardiloso e destemido<br>
+              Contra a força do governo<br>
+              Defensor de canudos<br>
+              Da revolta popular
+            </div>
+            <!-- Coluna 2: segunda estrofe -->
+            <div class="qs-poema-col">
+              Da união dos excluídos<br>
+              Contra a junta militar<br>
+              Ameaça ao Estado<br>
+              Ao avanço imperial<br>
+              Ao poder do latifúndio<br>
+              Uma trincheira social<br>
+              Essas são as referências<br>
+              Que Pajeú carrega<br>
+              Resistência em Movimento<br>
+              Pois a história não se encerra<br>
+              Se a história não se encerra<br>
+              O amanhã vamos fazer<br>
+              Somos todos Pajeú<br>
+              <strong>Ousar Lutar, Ousar Vencer!</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vídeo do Instagram — centralizado verticalmente à direita do poema -->
+        <div class="qs-video-wrap">
+          <blockquote
+            class="instagram-media"
+            data-instgrm-permalink="https://www.instagram.com/reel/DP40xm6gRci/?utm_source=ig_web_copy_link&igsh=NTc4MTIwNjQ2YQ=="
+            data-instgrm-version="14"
+            style="background:#FFF;border:0;border-radius:3px;box-shadow:0 0 1px 0 rgba(0,0,0,.5),0 1px 10px 0 rgba(0,0,0,.15);margin:1px;max-width:340px;min-width:280px;padding:0;width:99.375%;width:-webkit-calc(100% - 2px);width:calc(100% - 2px);">
+          </blockquote>
+          <script async src="//www.instagram.com/embed.js"></script>
+        </div>
+      </div>
+
+      <!-- Texto de apresentação abaixo -->
+      <div class="qs-bottom">
+        <p class="qs-gramsci">
+          "O velho mundo está morrendo. O novo tarda em aparecer.<br>
+          E nessa meia luz surgem os monstros."<br>
+          <em>— Antonio Gramsci</em>
+        </p>
+        <div class="qs-texto">
+          <p>
+            O <strong>Pajeú</strong> é um movimento de juventude ecossocialista que nasce do encontro
+            entre a luta socioambiental e os interesses da classe trabalhadora, das mulheres,
+            dos povos originários, negros, LGBTQIAPN+ e de todos os oprimidos.
+          </p>
+          <p>
+            Nosso nome homenageia um guerreiro negro liberto, estrategista e defensor de
+            Canudos — símbolo da revolta popular contra o Estado e o latifúndio.
+            <strong>Resistência em Movimento</strong>, pois a história não se encerra.
+          </p>
+          <p>
+            Pajeú utilizava as características do território para resistir frente ao poder
+            do Estado. Também nós utilizaremos nossos territórios para enfrentar os capitalistas!
+          </p>
+          <p>
+            Nossa luta atravessa a fronteira dos Estado-nação, somos internacionalistas solidários
+            a todos os povos oprimidos do mundo. 🌐
+          </p>
+
+          <!-- Bandeiras em uma única linha -->
+          <div class="pilares">
+            <div class="pilar">
+              <div class="pilar-icon">🌱</div>
+              <h4>Ecossocialismo</h4>
+              <p>A crise climática é resultado do capitalismo. Só a transformação social enfrenta suas raízes.</p>
+            </div>
+            <div class="pilar">
+              <div class="pilar-icon">✊</div>
+              <h4>Autonomia Popular</h4>
+              <p>Movimento independente do Estado e de governos. Poder popular nas ruas.</p>
+            </div>
+            <div class="pilar">
+              <div class="pilar-icon">🏳️‍🌈</div>
+              <h4>Diversidade</h4>
+              <p>Feminismo, luta LGBTQIAPN+, antirracismo e antimanicomial são centrais.</p>
+            </div>
+            <div class="pilar">
+              <div class="pilar-icon">📚</div>
+              <h4>Movimento Estudantil</h4>
+              <p>Educação pública, gratuita, laica e socialmente referenciada.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== DOCUMENTOS ===== -->
+  <section id="documentos">
+    <div class="container">
+      <div class="secao-label">Documentos</div>
+      <h2 class="secao-titulo">Nossas Resoluções</h2>
+      <p style="margin-top:1rem;color:var(--creme2);max-width:560px;font-size:.95rem;line-height:1.7">
+        Acesse nossas teses, resoluções e documentos políticos
+        produzidos coletivamente pela militância do Pajeú.
+      </p>
+      <div class="docs-grid" id="docsGrid"></div>
+    </div>
+  </section>
+
+  <!-- ===== ORGANIZE-SE ===== -->
+  <section id="organize-se">
+    <div class="container">
+      <div class="secao-label">Organize-se!</div>
+      <h2 class="secao-titulo">O futuro depende<br>da nossa luta!</h2>
+      <p class="org-sub">
+        Quer fazer parte do Pajeú? Preencha o formulário abaixo e entraremos em contato.
+        A luta se constrói coletivamente.
+      </p>
+      <form class="org-form" id="orgForm" onsubmit="enviarFormulario(event)">
+        <input type="text" name="nome" placeholder="Seu nome completo" required />
+        <select name="estado" required>
+          <option value="">Seu estado</option>
+          <option>Acre</option>
+          <option>Alagoas</option>
+          <option>Amapá</option>
+          <option>Amazonas</option>
+          <option>Bahia</option>
+          <option>Ceará</option>
+          <option>Espírito Santo</option>
+          <option>Goiás</option>
+          <option>Maranhão</option>
+          <option>Mato Grosso</option>
+          <option>Mato Grosso do Sul</option>
+          <option>Minas Gerais</option>
+          <option>Pará</option>
+          <option>Paraíba</option>
+          <option>Paraná</option>
+          <option>Pernambuco</option>
+          <option>Piauí</option>
+          <option>Rio de Janeiro</option>
+          <option>Rio Grande do Norte</option>
+          <option>Rio Grande do Sul</option>
+          <option>Rondônia</option>
+          <option>Roraima</option>
+          <option>Santa Catarina</option>
+          <option>São Paulo</option>
+          <option>Sergipe</option>
+          <option>Tocantins</option>
+        </select>
+        <input type="tel" name="contato" placeholder="Contato" required />
+        <select name="comoSoube">
+          <option value="">Como ficou sabendo do Pajeú?</option>
+          <option>Instagram</option>
+          <option>Indicação de um militante</option>
+          <option>Evento / Ato</option>
+          <option>Outros</option>
+        </select>
+        <textarea name="mensagem" placeholder="Por que quer se organizar com o Pajeú?"></textarea>
+        <button type="submit" id="formBtn">Quero me organizar ✊</button>
+        <div class="form-msg" id="formMsg"></div>
+      </form>
+      <div class="org-redes">
+        <a href="https://instagram.com/coletivopajeu" target="_blank" class="rede-btn">📸 Instagram</a>
+        <a href="https://wa.me/5591993590145?text=Ol%C3%A1!%20Gostaria%20de%20entrar%20em%20contato%20com%20o%20Coletivo%20Paje%C3%BA!" class="rede-btn">💬 Contato</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== RODAPÉ ===== -->
+  <footer>
+    <div class="footer-logo">Pajeú</div>
+    <div class="footer-sub">Resistência em Movimento</div>
+    <ul class="footer-links">
+      <li><a href="#inicio">Início</a></li>
+      <li><a href="#notas">Notas Políticas</a></li>
+      <li><a href="#quem-somos">Quem Somos</a></li>
+      <li><a href="#documentos">Documentos</a></li>
+      <li><a href="#organize-se">Organize-se!</a></li>
+      <li><a href="#" onclick="abrirAdmin(); return false;">Admin</a></li>
+    </ul>
+    <div class="footer-copy">
+      © 2025 Pajeú — Resistência em Movimento · Ousar Lutar, Ousar Vencer!
+    </div>
+  </footer>
+
+  <!-- ===== MODAL NOTA ===== -->
+  <div class="modal-bg" id="modalBg">
+    <div class="modal">
+      <button class="modal-fechar" onclick="fecharModal()">✕</button>
+      <h2 id="modalTitulo"></h2>
+      <p id="modalResumoModal" style="font-family:var(--font-body);font-size:.80rem;color:var(--bordo);margin-bottom:.75rem;display:none"></p>
+      <div class="modal-autor-bio" id="modalAutorBio" style="margin-bottom:1rem"></div>
+      <div class="modal-meta" id="modalMeta"></div>
+      <div class="modal-corpo" id="modalCorpo"></div>
+    </div>
+  </div>
+
+  <!-- ===== PAINEL ADMIN ===== -->
+  <div id="admin-panel">
+    <div class="admin-header">
+      <h2>⚙ Painel Admin — Pajeú</h2>
+      <button class="btn btn-outline" onclick="fecharAdmin()" style="color:var(--ouro);border-color:var(--ouro)">Fechar ✕</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="adminLogin" style="max-width:400px;margin:3rem auto;text-align:center">
+      <p style="color:var(--creme2);margin-bottom:1.5rem;font-family:var(--font-ui);letter-spacing:.1em;text-transform:uppercase;font-size:.8rem">
+        Acesso restrito à militância
+      </p>
+      <input type="password" id="adminSenha" placeholder="Senha"
+        style="width:100%;padding:.85rem;background:rgba(255,255,255,.07);border:1px solid rgba(232,184,75,.3);color:var(--creme);font-size:1rem;margin-bottom:1rem"
+        onkeydown="if(event.key==='Enter')verificarSenha()" />
+      <button onclick="verificarSenha()" class="btn btn-ouro" style="width:100%">Entrar</button>
+      <p id="adminErro" style="color:#e05050;margin-top:.75rem;font-size:.85rem;display:none">Senha incorreta.</p>
+    </div>
+
+    <!-- CONTEÚDO ADMIN -->
+    <div id="adminConteudo" style="display:none">
+
+      <!-- Abas -->
+      <div class="admin-tabs">
+        <button class="admin-tab-btn ativo" onclick="abrirTab('tabNotas', this)">📝 Notas Políticas</button>
+        <button class="admin-tab-btn" onclick="abrirTab('tabDocs', this)">📄 Documentos</button>
+        <button class="admin-tab-btn" onclick="abrirTab('tabQuemSomos', this)">👥 Quem Somos</button>
+        <button class="admin-tab-btn" onclick="abrirTab('tabHero', this)">🏠 Hero</button>
+        <button class="admin-tab-btn" onclick="abrirTab('tabCategorias', this)">🏷 Categorias</button>
+      </div>
+
+      <!-- ABA: NOTAS POLÍTICAS -->
+      <div id="tabNotas" class="admin-secao ativa">
+        <div class="admin-form">
+          <h3 style="font-family:var(--font-display);color:var(--ouro);font-size:1.15rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem">
+            Nova Nota Política
+          </h3>
+
+          <!-- Título -->
+          <div>
+            <label>Título</label>
+            <input type="text" id="adminTitulo" placeholder="Título da nota" />
+          </div>
+
+          <!-- Resumo (máx 100 caracteres) -->
+          <div>
+            <label>Resumo <span id="adminResumoCount" style="opacity:.55;font-size:.7rem;text-transform:none;letter-spacing:0">(0/200)</span></label>
+            <input type="text" id="adminResumo" placeholder="Resumo curto — aparece abaixo do título (máx. 200 caracteres)" maxlength="200"
+              oninput="document.getElementById('adminResumoCount').textContent='('+this.value.length+'/200)'" />
+          </div>
+
+          <!-- Imagem de capa -->
+          <div>
+            <label>URL da Imagem de Capa</label>
+            <input type="url" id="adminCapa" placeholder="https://exemplo.com/imagem.jpg  (opcional)" />
+            <p style="color:var(--creme2);opacity:.5;font-size:.7rem;margin-top:.2rem;font-family:var(--font-ui)">Cole o link direto de uma imagem externa. O título e o resumo aparecerão sobre ela.</p>
+          </div>
+
+          <!-- Categoria -->
+          <div>
+            <label>Categoria</label>
+            <select id="adminCategoria">
+              <option>Conjuntura</option>
+            </select>
+          </div>
+
+          <!-- Autor/a -->
+          <div>
+            <label>Autor/a</label>
+            <input type="text" id="adminAutor" placeholder="Nome do autor" />
+          </div>
+
+          <!-- Biografia do autor -->
+          <div>
+            <label>Biografia do/a Autor/a</label>
+            <textarea id="adminBio" placeholder="Breve biografia do/a autor/a" style="min-height:80px;resize:vertical"></textarea>
+          </div>
+
+          <!-- Texto completo — editor rico -->
+          <div>
+            <label class="rte-label">Texto completo</label>
+
+            <!-- Barra de ferramentas -->
+            <div class="rte-toolbar" id="rteToolbar">
+              <!-- Negrito / Itálico / Sublinhado -->
+              <button type="button" title="Negrito" onclick="rteCmd('bold')"><b>N</b></button>
+              <button type="button" title="Itálico" onclick="rteCmd('italic')"><i>I</i></button>
+              <button type="button" title="Sublinhado" onclick="rteCmd('underline')"><u>S</u></button>
+
+              <span class="rte-sep"></span>
+
+              <!-- Alinhamento -->
+              <button type="button" title="Alinhar à esquerda" onclick="rteCmd('justifyLeft')">⬅</button>
+              <button type="button" title="Centralizar" onclick="rteCmd('justifyCenter')">☰</button>
+              <button type="button" title="Alinhar à direita" onclick="rteCmd('justifyRight')">➡</button>
+              <button type="button" title="Justificar" onclick="rteCmd('justifyFull')">≡</button>
+
+              <span class="rte-sep"></span>
+
+              <!-- Recuo de parágrafo -->
+              <button type="button" title="Aumentar recuo" onclick="rteCmd('indent')">⇥</button>
+              <button type="button" title="Diminuir recuo" onclick="rteCmd('outdent')">⇤</button>
+
+              <span class="rte-sep"></span>
+
+              <!-- Espaçamento entre linhas -->
+              <select title="Espaçamento entre linhas" onchange="rteEspacamento(this.value)">
+                <option value="">Espaç.</option>
+                <option value="1">1×</option>
+                <option value="1.5">1,5×</option>
+              </select>
+
+              <span class="rte-sep"></span>
+
+              <!-- Cor da fonte -->
+              <label title="Cor da fonte" style="display:flex;align-items:center;gap:.2rem;cursor:pointer;color:var(--creme);font-size:.72rem;border:1px solid rgba(232,184,75,.25);padding:.28rem .4rem;background:rgba(255,255,255,.08)">
+                A <input type="color" id="rteCor" value="#f4ede0" onchange="rteCmd('foreColor', this.value)" title="Cor da fonte" />
+              </label>
+            </div>
+
+            <!-- Área editável -->
+            <div id="rteEditor" class="rte-editor" contenteditable="true"
+              onmouseup="rteAtualizarBotoes()" onkeyup="rteAtualizarBotoes()"></div>
+          </div>
+
+          <!-- Data de Publicação -->
+          <div>
+            <label>Data de Publicação</label>
+            <input type="datetime-local" id="adminDataPublicacao" />
+            <p style="color:var(--creme2);opacity:.6;font-size:.72rem;margin-top:.25rem;font-family:var(--font-ui)">Deixe em branco para usar a data/hora atual</p>
+          </div>
+
+          <button onclick="publicarNota()" class="btn btn-ouro" style="margin-top:.5rem">Publicar Nota</button>
+          <p id="adminOk" style="color:#5ec45e;display:none;font-family:var(--font-ui);font-size:.85rem">✓ Nota publicada com sucesso!</p>
+        </div>
+
+        <div class="admin-posts">
+          <h3>Notas Publicadas</h3>
+          <div id="adminListaPosts"></div>
+        </div>
+      </div>
+
+      <!-- ABA: DOCUMENTOS -->
+      <div id="tabDocs" class="admin-secao">
+        <div class="admin-form">
+          <h3 style="font-family:var(--font-display);color:var(--ouro);font-size:1.15rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem">
+            Novo Documento
+          </h3>
+          <div>
+            <label>Título do documento</label>
+            <input type="text" id="docTitulo" placeholder="Ex: Caderno de Teses — Congresso" />
+          </div>
+          <div>
+            <label>Descrição</label>
+            <textarea id="docDescricao" style="min-height:80px" placeholder="Breve descrição do documento..."></textarea>
+          </div>
+          <div>
+            <label>Link de acesso (Google Drive, PDF, etc.)</label>
+            <input type="url" id="docLink" placeholder="https://drive.google.com/..." />
+          </div>
+          <div>
+            <label>Tipo</label>
+            <select id="docTipo">
+              <option value="PDF">PDF</option>
+              <option value="Google Doc">Google Doc</option>
+              <option value="Link">Link</option>
+              <option value="Apresentação">Apresentação</option>
+            </select>
+          </div>
+          <button onclick="publicarDoc()" class="btn btn-ouro" style="margin-top:.5rem">Adicionar Documento</button>
+          <p id="docOk" style="color:#5ec45e;display:none;font-family:var(--font-ui);font-size:.85rem">✓ Documento adicionado!</p>
+        </div>
+
+        <div class="admin-docs-lista">
+          <h3>Documentos Publicados</h3>
+          <div id="adminListaDocs"></div>
+        </div>
+      </div>
+
+      <!-- ABA: QUEM SOMOS -->
+      <div id="tabQuemSomos" class="admin-secao">
+        <div class="admin-form">
+          <h3 style="font-family:var(--font-display);color:var(--ouro);font-size:1.15rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem">
+            Editar Seção Quem Somos
+          </h3>
+          <p style="color:var(--creme2);font-size:.85rem;margin-bottom:1rem">
+            Edite os parágrafos de apresentação do Pajeú. Use quebras de linha para separar parágrafos.
+          </p>
+          <div>
+            <label>Parágrafo 1</label>
+            <textarea id="qsP1" style="min-height:90px"></textarea>
+          </div>
+          <div>
+            <label>Parágrafo 2</label>
+            <textarea id="qsP2" style="min-height:90px"></textarea>
+          </div>
+          <div>
+            <label>Parágrafo 3</label>
+            <textarea id="qsP3" style="min-height:90px"></textarea>
+          </div>
+          <div>
+            <label>Parágrafo 4</label>
+            <textarea id="qsP4" style="min-height:90px"></textarea>
+          </div>
+          <button onclick="salvarQuemSomos()" class="btn btn-ouro" style="margin-top:.5rem">Salvar Alterações</button>
+          <button onclick="resetarQuemSomos()" style="margin-top:.5rem;background:transparent;border:1px solid rgba(232,184,75,.3);color:var(--creme2);font-family:var(--font-ui);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;padding:.6rem 1rem;cursor:pointer">Restaurar padrão</button>
+          <p id="qsOk" style="color:#5ec45e;display:none;font-family:var(--font-ui);font-size:.85rem">✓ Texto atualizado com sucesso!</p>
+        </div>
+      </div>
+
+      <!-- ABA: HERO -->
+      <div id="tabHero" class="admin-secao">
+        <div class="admin-form">
+          <h3 style="font-family:var(--font-display);color:var(--ouro);font-size:1.15rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem">
+            Editar Hero (Página Inicial)
+          </h3>
+          <div>
+            <label>Texto principal (linha 1)</label>
+            <input type="text" id="heroL1" placeholder="Ex: Ousar Lutar," />
+          </div>
+          <div>
+            <label>Texto em destaque (linha 2 — ouro)</label>
+            <input type="text" id="heroL2" placeholder="Ex: Ousar Vencer!" />
+          </div>
+          <div>
+            <label>Subtexto / descrição</label>
+            <textarea id="heroSub" style="min-height:80px" placeholder="Descrição abaixo do título..."></textarea>
+          </div>
+          <button onclick="salvarHero()" class="btn btn-ouro" style="margin-top:.5rem">Salvar Hero</button>
+          <button onclick="resetarHero()" style="margin-top:.5rem;background:transparent;border:1px solid rgba(232,184,75,.3);color:var(--creme2);font-family:var(--font-ui);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;padding:.6rem 1rem;cursor:pointer">Restaurar padrão</button>
+          <p id="heroOk" style="color:#5ec45e;display:none;font-family:var(--font-ui);font-size:.85rem">✓ Hero atualizado!</p>
+        </div>
+      </div>
+
+      <!-- ABA: CATEGORIAS -->
+      <div id="tabCategorias" class="admin-secao">
+        <div class="admin-form">
+          <h3 style="font-family:var(--font-display);color:var(--ouro);font-size:1.15rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem">
+            Gerenciar Categorias
+          </h3>
+          <p style="color:var(--creme2);font-size:.85rem;margin-bottom:1rem">
+            Crie novas categorias para as notas políticas. As categorias padrão não podem ser removidas.
+          </p>
+          <div style="display:flex;gap:.75rem;align-items:flex-end">
+            <div style="flex:1">
+              <label>Nome da nova categoria</label>
+              <input type="text" id="novaCatInput" placeholder="Ex: Internacional" onkeydown="if(event.key==='Enter')adicionarCategoria()" />
+            </div>
+            <button onclick="adicionarCategoria()" class="btn btn-ouro" style="margin-bottom:0;white-space:nowrap">Adicionar</button>
+          </div>
+          <p id="catOk" style="color:#5ec45e;display:none;font-family:var(--font-ui);font-size:.85rem">✓ Categoria adicionada!</p>
+        </div>
+        <div class="admin-posts" style="max-width:700px;margin:1.5rem auto 0">
+          <h3 style="font-family:var(--font-display);color:var(--ouro);font-size:1.1rem;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid rgba(232,184,75,.3);padding-bottom:.5rem;margin-bottom:1rem">Categorias Existentes</h3>
+          <div id="adminListaCats"></div>
+        </div>
+      </div>
+
+    </div><!-- /adminConteudo -->
+  </div><!-- /admin-panel -->
+
+  <!-- ===== SCRIPTS ===== -->
+  <script>
+    /* ============================================================
+       CONSTANTES
+    ============================================================ */
+    const SENHA_ADMIN = 'pajeu2025';
+    /* ID da planilha Google Sheets (para o Apps Script) */
+    const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwQ7ACvG_LkafCnfA9pw6TkiltVaSwzm-98TdLcs4L81_-DlymzOod37Cwr8NzkHSIQJg/exec';
+
+    /* Dados iniciais padrão */
+    const NOTAS_INICIAIS = [];
+
+    const DOCS_INICIAIS = [];
+
+    const QS_PADRAO = [
+      'O Pajeú é um movimento de juventude ecossocialista que nasce do encontro entre a luta socioambiental e os interesses da classe trabalhadora, das mulheres, dos povos originários, negros, LGBTQIAPN+ e de todos os oprimidos.',
+      'Nosso nome homenageia um guerreiro negro liberto, estrategista e defensor de Canudos — símbolo da revolta popular contra o Estado e o latifúndio. Resistência em Movimento, pois a história não se encerra.',
+      'Pajeú utilizava as características do território para resistir frente ao poder do Estado. Também nós utilizaremos nossos territórios para enfrentar os capitalistas!',
+      'Nossa luta atravessa a fronteira dos Estado-nação, somos internacionalistas solidários a todos os povos oprimidos do mundo. 🌐'
+    ];
+
+    const HERO_PADRAO = {
+      l1: 'Ousar Lutar,',
+      l2: 'Ousar Vencer!',
+      sub: 'Somos um movimento de juventude ecossocialista que conecta a luta socioambiental com os interesses da classe trabalhadora. Raiz popular, horizonte revolucionário.'
+    };
+
+    /* ============================================================
+       HELPERS
+    ============================================================ */
+    function formatarData(iso) {
+      const [a,m,d] = iso.split('-');
+      const meses = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+      return `${d} ${meses[+m-1]} ${a}`;
+    }
+
+    function formatarDataHora(iso) {
+      const dt = new Date(iso);
+      const meses = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+      const d = String(dt.getDate()).padStart(2,'0');
+      const m = meses[dt.getMonth()];
+      const a = dt.getFullYear();
+      const h = String(dt.getHours()).padStart(2,'0');
+      const min = String(dt.getMinutes()).padStart(2,'0');
+      return `${d} ${m} ${a}, ${h}:${min}`;
+    }
+
+    function ls(key, fallback = null) {
+      try { return JSON.parse(localStorage.getItem(key)) ?? fallback; }
+      catch { return fallback; }
+    }
+    function lsSet(key, val) {
+      try { localStorage.setItem(key, JSON.stringify(val)); } catch {}
+    }
+
+    /* ============================================================
+       DADOS
+    ============================================================ */
+    function carregarNotas() {
+      const salvas = ls('pajeu_notas', []);
+      const todas = [...NOTAS_INICIAIS, ...salvas];
+      // Ordenação decrescente: mais recentes primeiro (por dataHora ISO)
+      todas.sort((a, b) => {
+        const dtA = a.dataHora || (a.data + 'T00:00:00');
+        const dtB = b.dataHora || (b.data + 'T00:00:00');
+        return dtB.localeCompare(dtA);
+      });
+      return todas;
+    }
+    function carregarDocs() {
+      const extras = ls('pajeu_docs', []);
+      return [...DOCS_INICIAIS, ...extras];
+    }
+
+    /* ============================================================
+       RENDER: NOTAS
+    ============================================================ */
+    function renderNotas() {
+      const notas = carregarNotas().slice(0, 6);
+      document.getElementById('notasGrid').innerHTML = notas.map(n => {
+        if (n.capa) {
+          return `
+            <div class="nota-card tem-capa" onclick="abrirNota(${n.id})" style="cursor:pointer">
+              <div class="nota-capa">
+                <img src="${n.capa}" alt="${n.titulo}" onerror="this.parentElement.style.display='none'">
+                <div class="nota-capa-overlay">
+                  <span class="nota-tag">${n.categoria}</span>
+                  <h3 class="nota-titulo">${n.titulo}</h3>
+                  ${n.resumo ? `<p class="nota-resumo-capa">${n.resumo}</p>` : ''}
+                </div>
+              </div>
+              <div class="nota-body">
+                <div class="nota-meta">
+                  <span>${n.autor} · ${formatarData(n.data)}</span>
+                  <a href="#" class="nota-ler" onclick="event.stopPropagation();abrirNota(${n.id}); return false;">Ler →</a>
+                </div>
+              </div>
+            </div>`;
+        }
+        return `
+          <div class="nota-card">
+            <span class="nota-tag">${n.categoria}</span>
+            <h3 class="nota-titulo">${n.titulo}</h3>
+            ${n.resumo ? `<p class="nota-resumo">${n.resumo}</p>` : ''}
+            <div class="nota-meta">
+              <span>${n.autor} · ${formatarData(n.data)}</span>
+              <a href="#" class="nota-ler" onclick="abrirNota(${n.id}); return false;">Ler →</a>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    /* ============================================================
+       RENDER: DOCUMENTOS
+    ============================================================ */
+    function renderDocs() {
+      document.getElementById('docsGrid').innerHTML = carregarDocs().map(d => `
+        <a href="${d.link}" target="_blank" class="doc-card">
+          <div class="doc-icone">${d.icone || '📄'}</div>
+          <div class="doc-info">
+            <h3>${d.titulo}</h3>
+            <p>${d.descricao}</p>
+            <span>↗ ${d.tipo}</span>
+          </div>
+        </a>
+      `).join('');
+    }
+
+    /* ============================================================
+       RENDER: QUEM SOMOS (editorável)
+    ============================================================ */
+    function renderQuemSomos() {
+      const textos = ls('pajeu_qs', null);
+      if (!textos) return; /* usa o HTML estático padrão */
+      const divs = document.querySelectorAll('.qs-texto p');
+      if (divs.length < 4) return;
+      const arr = Array.isArray(textos) ? textos : QS_PADRAO;
+      divs.forEach((el, i) => {
+        if (arr[i] !== undefined) el.innerHTML = arr[i].replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      });
+    }
+
+    /* ============================================================
+       RENDER: HERO (editorável)
+    ============================================================ */
+    function renderHero() {
+      const hero = ls('pajeu_hero', null);
+      if (!hero) return;
+      const tituloEl = document.querySelector('.hero-titulo');
+      if (tituloEl) tituloEl.innerHTML = `${hero.l1}<br><em>${hero.l2}</em>`;
+      const textoEl = document.querySelector('.hero-texto');
+      if (textoEl) textoEl.textContent = hero.sub;
+    }
+
+    /* ============================================================
+       FAIXA TICKER
+    ============================================================ */
+    function initFaixa() {
+      const texto = [
+        'Ousar Lutar, Ousar Vencer!','✦','Somos todos Pajeú','✦',
+        'Resistência em Movimento','✦','Ecossocialismo ou Extinção','✦',
+        'Ditadura Nunca Mais!','✦','Por uma UNE que Ouse Lutar!','✦',
+      ];
+      const inner = document.getElementById('faixaInner');
+      const html = texto.map(t => `<span class="${t==='✦'?'sep':''}">${t}</span>`).join('');
+      inner.innerHTML = html + html;
+    }
+
+    /* ============================================================
+       MODAL NOTA
+    ============================================================ */
+    function abrirNota(id) {
+      const nota = carregarNotas().find(n => n.id === id);
+      if (!nota) return;
+      document.getElementById('modalTitulo').textContent = nota.titulo;
+
+      // Autor + bio acima da data
+      const autorBioEl = document.getElementById('modalAutorBio');
+      let autorHtml = `<span class="autor-nome">${nota.autor}</span>`;
+      if (nota.bio) {
+        autorHtml += `<span class="autor-bio-txt">${nota.bio.replace(/\n/g,'<br>')}</span>`;
+      }
+      autorBioEl.innerHTML = autorHtml;
+
+      // Meta: data + categoria + editado
+      let metaHtml = `${formatarData(nota.data)} · ${nota.categoria}`;
+      if (nota.editadoEm) {
+        metaHtml += `<br><span style="font-size:.68rem;opacity:.75">Editado em: ${formatarDataHora(nota.editadoEm)}</span>`;
+      }
+      document.getElementById('modalMeta').innerHTML = metaHtml;
+      document.getElementById('modalCorpo').innerHTML = nota.corpo;
+
+      // Resumo abaixo do título
+      const resumoEl = document.getElementById('modalResumoModal');
+      if (nota.resumo) { resumoEl.textContent = nota.resumo; resumoEl.style.display = 'block'; }
+      else { resumoEl.style.display = 'none'; }
+
+      document.getElementById('modalBg').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function fecharModal() {
+      document.getElementById('modalBg').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    document.getElementById('modalBg').addEventListener('click', function(e) {
+      if (e.target === this) fecharModal();
+    });
+
+    /* ============================================================
+       NAV MOBILE
+    ============================================================ */
+    function toggleNav() {
+      document.getElementById('navLinks').classList.toggle('open');
+    }
+    /* Fechar menu ao clicar em link */
+    document.querySelectorAll('.nav-links a').forEach(a => {
+      a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open'));
+    });
+
+    /* ============================================================
+       ADMIN — ABRIR / FECHAR / LOGIN
+    ============================================================ */
+    function abrirAdmin() {
+      document.getElementById('admin-panel').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function fecharAdmin() {
+      document.getElementById('admin-panel').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function verificarSenha() {
+      if (document.getElementById('adminSenha').value === SENHA_ADMIN) {
+        document.getElementById('adminLogin').style.display = 'none';
+        document.getElementById('adminConteudo').style.display = 'block';
+        renderAdminListaNotas();
+        renderAdminListaDocs();
+        preencherCamposQuemSomos();
+        preencherCamposHero();
+        preencherSelectCategorias();
+        renderAdminListaCats();
+      } else {
+        document.getElementById('adminErro').style.display = 'block';
+      }
+    }
+
+    /* ============================================================
+       ADMIN — ABAS
+    ============================================================ */
+    function abrirTab(id, btn) {
+      document.querySelectorAll('.admin-secao').forEach(el => el.classList.remove('ativa'));
+      document.querySelectorAll('.admin-tab-btn').forEach(el => el.classList.remove('ativo'));
+      document.getElementById(id).classList.add('ativa');
+      btn.classList.add('ativo');
+    }
+
+    /* ============================================================
+       EDITOR DE TEXTO RICO — helpers
+    ============================================================ */
+    function rteCmd(cmd, val) {
+      document.getElementById('rteEditor').focus();
+      document.execCommand(cmd, false, val || null);
+      rteAtualizarBotoes();
+    }
+
+    function rteEspacamento(val) {
+      if (!val) return;
+      const editor = document.getElementById('rteEditor');
+      editor.focus();
+      // Aplica line-height a todos os parágrafos e blocos dentro do editor
+      const sel = window.getSelection();
+      if (sel && sel.rangeCount) {
+        const range = sel.getRangeAt(0);
+        const container = range.commonAncestorContainer;
+        const block = (container.nodeType === 3 ? container.parentElement : container);
+        const closest = block.closest('[contenteditable]') ? block : editor;
+        // Aplica ao bloco mais próximo ou ao editor todo
+        const target = closest === editor ? editor : block;
+        target.style.lineHeight = val;
+      } else {
+        editor.style.lineHeight = val;
+      }
+    }
+
+    function rteAtualizarBotoes() {
+      ['bold','italic','underline'].forEach(cmd => {
+        const btn = document.querySelector(`.rte-toolbar button[onclick="rteCmd('${cmd}')"]`);
+        if (btn) btn.classList.toggle('ativo', document.queryCommandState(cmd));
+      });
+    }
+
+    /* ============================================================
+       CATEGORIAS
+    ============================================================ */
+    const CATS_PADRAO = ['Conjuntura','Ecossocialismo','Educação','Gênero e Sexualidade','Antirracismo','Movimento Estudantil'];
+
+    function getCategorias() {
+      const extras = ls('pajeu_cats', []);
+      return [...CATS_PADRAO, ...extras];
+    }
+
+    function adicionarCategoria() {
+      const input = document.getElementById('novaCatInput');
+      const nome = input.value.trim();
+      if (!nome) return;
+      const extras = ls('pajeu_cats', []);
+      if (getCategorias().map(c=>c.toLowerCase()).includes(nome.toLowerCase())) return;
+      extras.push(nome);
+      lsSet('pajeu_cats', extras);
+      input.value = '';
+      document.getElementById('catOk').style.display = 'block';
+      setTimeout(() => document.getElementById('catOk').style.display = 'none', 2500);
+      renderAdminListaCats();
+      preencherSelectCategorias();
+    }
+
+    function excluirCategoria(nome) {
+      if (!confirm(`Remover categoria "${nome}"?`)) return;
+      const extras = ls('pajeu_cats', []);
+      lsSet('pajeu_cats', extras.filter(c => c !== nome));
+      renderAdminListaCats();
+      preencherSelectCategorias();
+    }
+
+    function renderAdminListaCats() {
+      const lista = document.getElementById('adminListaCats');
+      if (!lista) return;
+      const cats = getCategorias();
+      lista.innerHTML = cats.map(c => {
+        const isPadrao = CATS_PADRAO.includes(c);
+        return `
+          <div class="admin-post-item">
+            <span style="color:var(--creme)">${c}</span>
+            <div class="admin-item-btns">
+              ${isPadrao
+                ? `<span style="color:var(--ouro);font-size:.7rem;font-family:var(--font-ui)">PADRÃO</span>`
+                : `<button class="btn-excluir" onclick="excluirCategoria('${c.replace(/'/g,"\\'")}')">Remover</button>`}
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function preencherSelectCategorias() {
+      const cats = getCategorias();
+      const opts = cats.map(c => `<option>${c}</option>`).join('');
+      const sel = document.getElementById('adminCategoria');
+      if (sel) sel.innerHTML = opts;
+    }
+
+    /* ============================================================
+       ADMIN — NOTAS
+    ============================================================ */
+    function publicarNota() {
+      const titulo    = document.getElementById('adminTitulo').value.trim();
+      const corpo     = document.getElementById('rteEditor').innerHTML.trim();
+      const resumo    = document.getElementById('adminResumo').value.trim();
+      const capa      = document.getElementById('adminCapa').value.trim();
+      const bio       = document.getElementById('adminBio').value.trim();
+      const categoria = document.getElementById('adminCategoria').value;
+      const autor     = document.getElementById('adminAutor').value.trim() || 'Coletivo Pajeú';
+      const dataInput = document.getElementById('adminDataPublicacao').value;
+      if (!titulo || !corpo) return;
+
+      const agora = new Date();
+      const dataHora = dataInput ? new Date(dataInput).toISOString() : agora.toISOString();
+      const dataSomente = dataHora.split('T')[0];
+
+      const salvas = ls('pajeu_notas', []);
+      const novaId = Date.now();
+      salvas.push({
+        id: novaId, titulo, categoria, autor,
+        data: dataSomente, dataHora,
+        resumo: resumo || corpo.replace(/<[^>]+>/g,'').slice(0, 50),
+        capa: capa || '',
+        bio: bio || '',
+        corpo
+      });
+      lsSet('pajeu_notas', salvas);
+
+      document.getElementById('adminTitulo').value = '';
+      document.getElementById('adminResumo').value = '';
+      document.getElementById('adminCapa').value = '';
+      document.getElementById('adminBio').value = '';
+      document.getElementById('rteEditor').innerHTML = '';
+      document.getElementById('adminAutor').value = '';
+      document.getElementById('adminDataPublicacao').value = '';
+      document.getElementById('adminResumoCount').textContent = '(0/200)';
+      document.getElementById('adminOk').style.display = 'block';
+      setTimeout(() => document.getElementById('adminOk').style.display = 'none', 3000);
+      renderNotas();
+      renderAdminListaNotas();
+    }
+
+    function renderAdminListaNotas() {
+      const salvas = ls('pajeu_notas', []);
+      const cats = getCategorias();
+      const lista = document.getElementById('adminListaPosts');
+      if (!salvas.length) {
+        lista.innerHTML = '<p style="color:var(--creme2);opacity:.5;font-size:.85rem">Nenhuma nota publicada ainda.</p>';
+        return;
+      }
+      lista.innerHTML = salvas.map((n, i) => `
+        <div>
+          <div class="admin-post-item">
+            <span style="color:var(--creme)">${n.titulo}</span>
+            <div class="admin-item-btns">
+              <button class="btn-editar" onclick="toggleEditarNota(${i})">Editar</button>
+              <button class="btn-excluir" onclick="excluirNota(${i})">Excluir</button>
+            </div>
+          </div>
+          <div class="admin-editar-area" id="editNota_${i}">
+            <label>Título</label>
+            <input type="text" id="editNotaTitulo_${i}" value="${n.titulo.replace(/"/g,'&quot;')}" />
+            <label>Resumo</label>
+            <input type="text" id="editNotaResumo_${i}" value="${(n.resumo||'').replace(/"/g,'&quot;')}" maxlength="200" />
+            <label>Categoria</label>
+            <select id="editNotaCat_${i}">
+              ${cats.map(c => `<option${c===n.categoria?' selected':''}>${c}</option>`).join('')}
+            </select>
+            <label>Autor/a</label>
+            <input type="text" id="editNotaAutor_${i}" value="${n.autor.replace(/"/g,'&quot;')}" />
+            <label>Biografia do/a Autor/a</label>
+            <textarea id="editNotaBio_${i}" style="min-height:60px;resize:vertical">${(n.bio||'').replace(/</g,'&lt;')}</textarea>
+            <label>Texto completo</label>
+            <div class="rte-toolbar" id="editRteToolbar_${i}">
+              <button type="button" title="Negrito" onclick="rteEditCmd(${i},'bold')"><b>N</b></button>
+              <button type="button" title="Itálico" onclick="rteEditCmd(${i},'italic')"><i>I</i></button>
+              <button type="button" title="Sublinhado" onclick="rteEditCmd(${i},'underline')"><u>S</u></button>
+              <span class="rte-sep"></span>
+              <button type="button" title="Alinhar à esquerda" onclick="rteEditCmd(${i},'justifyLeft')">⬅</button>
+              <button type="button" title="Centralizar" onclick="rteEditCmd(${i},'justifyCenter')">☰</button>
+              <button type="button" title="Alinhar à direita" onclick="rteEditCmd(${i},'justifyRight')">➡</button>
+              <button type="button" title="Justificar" onclick="rteEditCmd(${i},'justifyFull')">≡</button>
+              <span class="rte-sep"></span>
+              <button type="button" title="Aumentar recuo" onclick="rteEditCmd(${i},'indent')">⇥</button>
+              <button type="button" title="Diminuir recuo" onclick="rteEditCmd(${i},'outdent')">⇤</button>
+              <span class="rte-sep"></span>
+              <select title="Espaçamento entre linhas" onchange="rteEditEspacamento(${i},this.value)">
+                <option value="">Espaç.</option>
+                <option value="1">1×</option>
+                <option value="1.5">1,5×</option>
+              </select>
+              <span class="rte-sep"></span>
+              <label title="Cor da fonte" style="display:flex;align-items:center;gap:.2rem;cursor:pointer;color:var(--creme);font-size:.72rem;border:1px solid rgba(232,184,75,.25);padding:.28rem .4rem;background:rgba(255,255,255,.08)">
+                A <input type="color" value="#f4ede0" onchange="rteEditCmd(${i},'foreColor',this.value)" title="Cor da fonte" style="width:34px;height:28px;padding:2px 3px;cursor:pointer" />
+              </label>
+            </div>
+            <div id="editRteEditor_${i}" class="rte-editor" contenteditable="true"
+              onmouseup="rteEditAtualizarBotoes(${i})" onkeyup="rteEditAtualizarBotoes(${i})"
+              style="min-height:180px">${n.corpo}</div>
+            <button class="btn btn-ouro" style="font-size:.78rem;padding:.5rem 1.1rem;margin-top:.75rem" onclick="salvarEdicaoNota(${i})">💾 Salvar</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function toggleEditarNota(i) {
+      const el = document.getElementById(`editNota_${i}`);
+      el.classList.toggle('aberto');
+    }
+
+    function rteEditCmd(i, cmd, val) {
+      document.getElementById(`editRteEditor_${i}`).focus();
+      document.execCommand(cmd, false, val || null);
+      rteEditAtualizarBotoes(i);
+    }
+
+    function rteEditEspacamento(i, val) {
+      if (!val) return;
+      document.getElementById(`editRteEditor_${i}`).style.lineHeight = val;
+    }
+
+    function rteEditAtualizarBotoes(i) {
+      const toolbar = document.getElementById(`editRteToolbar_${i}`);
+      if (!toolbar) return;
+      ['bold','italic','underline'].forEach(cmd => {
+        const btn = toolbar.querySelector(`button[onclick="rteEditCmd(${i},'${cmd}')"]`);
+        if (btn) btn.classList.toggle('ativo', document.queryCommandState(cmd));
+      });
+    }
+
+    function salvarEdicaoNota(i) {
+      const salvas = ls('pajeu_notas', []);
+      const titulo = document.getElementById(`editNotaTitulo_${i}`).value.trim();
+      const corpo  = document.getElementById(`editRteEditor_${i}`).innerHTML.trim();
+      const resumo = document.getElementById(`editNotaResumo_${i}`).value.trim();
+      const categoria = document.getElementById(`editNotaCat_${i}`).value;
+      const autor  = document.getElementById(`editNotaAutor_${i}`).value.trim();
+      const bio    = document.getElementById(`editNotaBio_${i}`).value.trim();
+      if (!titulo || !corpo) return;
+      salvas[i] = {
+        ...salvas[i], titulo, categoria, autor, bio,
+        resumo: resumo || corpo.replace(/<[^>]+>/g,'').slice(0, 160) + '…',
+        corpo,
+        editadoEm: new Date().toISOString()
+      };
+      lsSet('pajeu_notas', salvas);
+      renderNotas();
+      renderAdminListaNotas();
+    }
+
+    function excluirNota(idx) {
+      if (!confirm('Excluir esta nota?')) return;
+      const salvas = ls('pajeu_notas', []);
+      salvas.splice(idx, 1);
+      lsSet('pajeu_notas', salvas);
+      renderNotas();
+      renderAdminListaNotas();
+    }
+
+    /* ============================================================
+       ADMIN — DOCUMENTOS
+    ============================================================ */
+    function publicarDoc() {
+      const titulo   = document.getElementById('docTitulo').value.trim();
+      const descricao = document.getElementById('docDescricao').value.trim();
+      const link     = document.getElementById('docLink').value.trim();
+      const tipo     = document.getElementById('docTipo').value;
+      if (!titulo || !link) return;
+
+      const extras = ls('pajeu_docs', []);
+      extras.push({ id: 'doc_' + Date.now(), titulo, descricao, link, tipo, icone: '📄' });
+      lsSet('pajeu_docs', extras);
+
+      document.getElementById('docTitulo').value = '';
+      document.getElementById('docDescricao').value = '';
+      document.getElementById('docLink').value = '';
+      document.getElementById('docOk').style.display = 'block';
+      setTimeout(() => document.getElementById('docOk').style.display = 'none', 3000);
+      renderDocs();
+      renderAdminListaDocs();
+    }
+
+    function renderAdminListaDocs() {
+      const extras = ls('pajeu_docs', []);
+      const lista = document.getElementById('adminListaDocs');
+      const todos = [...DOCS_INICIAIS.map(d => ({...d, _inicial: true})), ...extras];
+      if (!todos.length) {
+        lista.innerHTML = '<p style="color:var(--creme2);opacity:.5;font-size:.85rem">Nenhum documento.</p>';
+        return;
+      }
+      lista.innerHTML = todos.map((d, i) => `
+        <div>
+          <div class="admin-post-item">
+            <span style="color:var(--creme)">${d.titulo}</span>
+            <div class="admin-item-btns">
+              ${!d._inicial ? `<button class="btn-editar" onclick="toggleEditarDoc(${i})">Editar</button>` : ''}
+              ${!d._inicial ? `<button class="btn-excluir" onclick="excluirDoc('${d.id}')">Retirar do ar</button>` : '<span style="color:var(--ouro);font-size:.7rem;font-family:var(--font-ui)">DOC PADRÃO</span>'}
+            </div>
+          </div>
+          ${!d._inicial ? `
+          <div class="admin-editar-area" id="editDoc_${i}">
+            <label>Título</label>
+            <input type="text" id="editDocTitulo_${i}" value="${d.titulo.replace(/"/g,'&quot;')}" />
+            <label>Descrição</label>
+            <textarea id="editDocDesc_${i}" style="min-height:60px">${d.descricao}</textarea>
+            <label>Link</label>
+            <input type="url" id="editDocLink_${i}" value="${d.link}" />
+            <button class="btn btn-ouro" style="font-size:.78rem;padding:.5rem 1.1rem" onclick="salvarEdicaoDoc('${d.id}', ${i})">💾 Salvar</button>
+          </div>` : ''}
+        </div>
+      `).join('');
+    }
+
+    function toggleEditarDoc(i) {
+      const el = document.getElementById(`editDoc_${i}`);
+      if (el) el.classList.toggle('aberto');
+    }
+
+    function salvarEdicaoDoc(id, i) {
+      const extras = ls('pajeu_docs', []);
+      const idx = extras.findIndex(d => d.id === id);
+      if (idx === -1) return;
+      extras[idx].titulo   = document.getElementById(`editDocTitulo_${i}`).value.trim();
+      extras[idx].descricao = document.getElementById(`editDocDesc_${i}`).value.trim();
+      extras[idx].link     = document.getElementById(`editDocLink_${i}`).value.trim();
+      lsSet('pajeu_docs', extras);
+      renderDocs();
+      renderAdminListaDocs();
+    }
+
+    function excluirDoc(id) {
+      if (!confirm('Retirar este documento do ar?')) return;
+      const extras = ls('pajeu_docs', []);
+      lsSet('pajeu_docs', extras.filter(d => d.id !== id));
+      renderDocs();
+      renderAdminListaDocs();
+    }
+
+    /* ============================================================
+       ADMIN — QUEM SOMOS
+    ============================================================ */
+    function preencherCamposQuemSomos() {
+      const textos = ls('pajeu_qs', QS_PADRAO);
+      textos.forEach((t, i) => {
+        const el = document.getElementById(`qsP${i+1}`);
+        if (el) el.value = t;
+      });
+    }
+    function salvarQuemSomos() {
+      const textos = [1,2,3,4].map(i => document.getElementById(`qsP${i}`).value.trim());
+      lsSet('pajeu_qs', textos);
+      renderQuemSomos();
+      document.getElementById('qsOk').style.display = 'block';
+      setTimeout(() => document.getElementById('qsOk').style.display = 'none', 3000);
+    }
+    function resetarQuemSomos() {
+      lsSet('pajeu_qs', QS_PADRAO);
+      preencherCamposQuemSomos();
+      renderQuemSomos();
+    }
+
+    /* ============================================================
+       ADMIN — HERO
+    ============================================================ */
+    function preencherCamposHero() {
+      const hero = ls('pajeu_hero', HERO_PADRAO);
+      document.getElementById('heroL1').value  = hero.l1;
+      document.getElementById('heroL2').value  = hero.l2;
+      document.getElementById('heroSub').value = hero.sub;
+    }
+    function salvarHero() {
+      const hero = {
+        l1:  document.getElementById('heroL1').value.trim(),
+        l2:  document.getElementById('heroL2').value.trim(),
+        sub: document.getElementById('heroSub').value.trim()
+      };
+      lsSet('pajeu_hero', hero);
+      renderHero();
+      document.getElementById('heroOk').style.display = 'block';
+      setTimeout(() => document.getElementById('heroOk').style.display = 'none', 3000);
+    }
+    function resetarHero() {
+      lsSet('pajeu_hero', HERO_PADRAO);
+      preencherCamposHero();
+      renderHero();
+    }
+
+    /* ============================================================
+       FORMULÁRIO — ORGANIZE-SE (Google Sheets via Apps Script)
+    ============================================================ */
+    async function enviarFormulario(e) {
+      e.preventDefault();
+      const form  = e.target;
+      const btn   = document.getElementById('formBtn');
+      const msg   = document.getElementById('formMsg');
+      const dados = new FormData(form);
+
+      /* Verificação básica */
+      if (!dados.get('nome') || !dados.get('estado')) return;
+
+      btn.disabled = true;
+      btn.textContent = 'Enviando…';
+      msg.className = 'form-msg';
+      msg.style.display = 'none';
+
+      const payload = {
+        nome:      dados.get('nome'),
+        estado:    dados.get('estado'),
+        contato:  dados.get('contato'),
+        comoSoube: dados.get('comoSoube'),
+        mensagem:  dados.get('mensagem')
+      };
+
+      try {
+        /* Se SHEETS_URL ainda tem o placeholder, apenas simula o envio */
+        if (SHEETS_URL.includes('SEU_DEPLOYMENT_ID_AQUI')) {
+          throw new Error('sheets_not_configured');
+        }
+        const res = await fetch(SHEETS_URL, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'text/plain;charset=utf-8'
+  },
+  body: JSON.stringify(payload)
+});
+
+console.log('status:', res.status);
+
+const respostaBruta = await res.text();
+console.log('resposta bruta:', respostaBruta);
+
+        form.reset();
+        msg.textContent = '✓ Recebemos seu contato! Logo entraremos em contato.';
+        msg.className = 'form-msg ok';
+        msg.style.display = 'block'
+      } catch (err) {
+        if (err.message === 'sheets_not_configured') {
+          /* Simulação até a URL ser configurada */
+          form.reset();
+          msg.textContent = '✓ Dados recebidos! (Configure o Apps Script para salvar na planilha — veja os comentários no código.)';
+          msg.className = 'form-msg ok';
+          msg.style.display = 'block'
+        } else {
+          msg.textContent = '⚠ Erro ao enviar. Tente novamente ou entre em contato pelo Instagram.';
+          msg.className = 'form-msg erro';
+          msg.style.display = 'block'
+        }
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Quero me organizar ✊';
+        setTimeout(() => { msg.style.display = 'none'; msg.className = 'form-msg'; }, 7000);
+      }
+    }
+
+    /* ============================================================
+       INIT
+    ============================================================ */
+    initFaixa();
+    renderNotas();
+    renderDocs();
+    renderQuemSomos();
+    renderHero();
+  </script>
+</body>
+</html>
